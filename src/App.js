@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+
 import './App.css';
-import './Person/Person.css';
 import Person from './Person/Person';
 
 class App extends Component {
@@ -43,15 +43,6 @@ class App extends Component {
 
   render(){
 
-    const style = {
-      backgroundColor: 'green',
-      color: 'white',
-      font: 'inherit',
-      border: '4px solid blue',
-      padding: '8px',
-      cursor: 'pointer'
-    };
-
     let persons = null;
 
     if (this.state.showPersons) {
@@ -68,7 +59,6 @@ class App extends Component {
           })}
         </div>
       )
-      style.backgroundColor = 'red';
     }
 
     const classes = [];
@@ -85,10 +75,9 @@ class App extends Component {
 
       <p className={classes.join(' ')}>This is really working!</p>
 
-      <button
-        style={style}
-        onClick={() => this.togglePersonsHandler('Big Bad Boi')}
-        >Switch Name</button>
+      <button className='button' onClick={this.togglePersonsHandler}>
+        Switch Name
+      </button>
       {persons}
     </div>
   )
