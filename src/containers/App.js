@@ -1,10 +1,28 @@
 import React, { Component } from 'react';
 
 import classes from './App.css';
-import Person from './Person/Person';
+import Person from '../components/Persons/Person/Person';
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
 
 class App extends Component {
-
+  constructor(props) {
+// You HAVE to add this when you make constructors. It calls the super method of the component you're extending.
+    super(props);
+    console.log('[App.js] constructor');
+    /*
+    this.state = {
+      persons: [
+        {id: 'adsf', name: 'Zack', age: 26},
+        {id: 'dssv', name: 'Jake', age: 24},
+        {id: 'easc', name: 'Max', age: 22},
+      ],
+      otherState: 'some other value',
+      showPersons: false,
+    }
+    */
+  }
+// Initializing state like this is a more modern way of the above method. This creates a constructor, calls super, and sets up state.
   state = {
     persons: [
       {id: 'adsf', name: 'Zack', age: 26},
@@ -15,19 +33,34 @@ class App extends Component {
     showPersons: false,
   }
 
+  static getDerivedStateFromProps(props, state) {
+    console.log('[App.js] getDerivedStateFromProps', props);
+    return state;
+  }
+
+  componentWillMount() {
+    console.log('[App.js] componentWillMount');
+  }
+
+  componentDidMount() {
+    console.log('[App.js] componentDidMount');
+  }
+
   nameChangeHandler = (event, id) => {
     const personIndex = this.state.persons.findIndex(p => {
       return p.id === id;
     })
+
     const person = {
       ...this.state.persons[personIndex]
     };
+
     person.name = event.target.value;
+
     const persons = [...this.state.persons];
     persons[personIndex] = person;
-    this.setState({
-      persons: persons
-    })
+
+    this.setState({ persons: persons })
   }
 
   deletePersonHandler = (index) => {
@@ -42,44 +75,25 @@ class App extends Component {
   }
 
   render(){
-
+    console.log('[App.js] render');
     let persons = null;
-    let btnClass = '';
 
     if (this.state.showPersons) {
       persons = (
-        <div>
-          {this.state.persons.map((person, index) => {
-            return <Person
-              click={()=>this.deletePersonHandler(index)}
-              name={person.name}
-              age={person.age}
-              key={person.id}
-              changed={(e)=> this.nameChangeHandler(e, person.id)}
-            />
-          })}
-        </div>
+        <Persons
+          persons = {this.state.persons}
+          clicked = {this.deletePersonHandler}
+          changed = {this.nameChangeHandler}/>
       )
-      btnClass = classes.Red;
-    }
-
-    const assignedClasses = [];
-    if (this.state.persons.length <=2) {
-      assignedClasses.push(classes.red);
-    }
-    if (this.state.persons.length <=1) {
-      assignedClasses.push(classes.bold);
     }
 
     return (
     <div className={classes.App}>
-      <h1>Hi, I'm a React App!</h1>
-
-      <p className={assignedClasses.join(' ')}>This is really working!</p>
-
-      <button className={btnClass} onClick={this.togglePersonsHandler}>
-        Switch Name
-      </button>
+      <Cockpit
+        title = {this.props.appTitle}
+        showPersons = {this.state.showPersons}
+        persons = {this.state.persons}
+        clicked = {this.togglePersonsHandler}/>
       {persons}
     </div>
   )
