@@ -4,6 +4,7 @@ import classes from './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
 import withClass from '../hoc/withClass';
+import PropTypes from 'prop-types';
 
 import Aux from '../hoc/Aux';
 
@@ -27,13 +28,14 @@ class App extends Component {
 // Initializing state like this is a more modern way of the above method. This creates a constructor, calls super, and sets up state.
   state = {
     persons: [
-      {id: 'adsf', name: 'Zack', age: 26},
-      {id: 'dssv', name: 'Jake', age: 24},
-      {id: 'easc', name: 'Max', age: 22},
+      {id: 'adsf', name: 'Zack', age: 27},
+      {id: 'dssv', name: 'Jake', age: 25},
+      {id: 'easc', name: 'Max', age: 23},
     ],
     otherState: 'some other value',
     showPersons: false,
-    showCockpit: true
+    showCockpit: true,
+    changeCounter: 0
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -63,7 +65,12 @@ class App extends Component {
     const persons = [...this.state.persons];
     persons[personIndex] = person;
 
-    this.setState({ persons: persons })
+    this.setState((prevState, props) => {
+      return {
+        persons: persons,
+        changeCounter: prevState.changeCounter + 1
+      }
+    });
   }
 
   deletePersonHandler = (index) => {
@@ -110,6 +117,10 @@ class App extends Component {
   // The code below is the exact same as the code above. The bottom code is what the top code is compiled to.
 
   // return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Does this work?'))
+}
+
+App.propTypes = {
+  appTitle: PropTypes.string
 }
 
 export default withClass(App, classes.App);
