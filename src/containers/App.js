@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 
 import classes from './App.css';
-import Person from '../components/Persons/Person/Person';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
+import withClass from '../hoc/withClass';
+
+import Aux from '../hoc/Aux';
 
 class App extends Component {
   constructor(props) {
@@ -31,6 +33,7 @@ class App extends Component {
     ],
     otherState: 'some other value',
     showPersons: false,
+    showCockpit: true
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -38,9 +41,9 @@ class App extends Component {
     return state;
   }
 
-  componentWillMount() {
-    console.log('[App.js] componentWillMount');
-  }
+  // componentWillMount() {
+  //   console.log('[App.js] componentWillMount');
+  // }
 
   componentDidMount() {
     console.log('[App.js] componentDidMount');
@@ -88,14 +91,18 @@ class App extends Component {
     }
 
     return (
-    <div className={classes.App}>
-      <Cockpit
+    <Aux>
+      <button onClick={()=>this.setState({showCockpit: this.state.showCockpit ? false: true})}>Remove Cockpit</button>
+      {this.state.showCockpit
+      ? <Cockpit
         title = {this.props.appTitle}
         showPersons = {this.state.showPersons}
-        persons = {this.state.persons}
+        personsLength = {this.state.persons.length}
         clicked = {this.togglePersonsHandler}/>
+      : null}
+
       {persons}
-    </div>
+    </Aux>
   )
   }
 
@@ -105,29 +112,4 @@ class App extends Component {
   // return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Does this work?'))
 }
 
-export default App;
-
-
-
-/*
-state = {
-  persons: [
-    {name: 'Zack', age: 26},
-    {name: 'Jake', age: 24},
-    {name: 'Max', age: 22},
-  ],
-  otherState: 'some other value'
-}
-
-switchNameHandler = () => {
-  // console.log('this was clicked')
-  // DON'T DO THIS: personsState.persons[1] = 'Jacob'
-  this.setState({
-    persons: [
-      {name: 'Zack', age: 26},
-      {name: 'Jacob', age: 24},
-      {name: 'Max', age: 22},
-    ]
-  })
-}
-*/
+export default withClass(App, classes.App);
